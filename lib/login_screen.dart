@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'register_screen.dart';
+import 'habit_tracker_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -18,8 +19,21 @@ class _LoginScreenState extends State<LoginScreen> {
   final String defaultPassword = 'password123';
 
   void _login() {
-    // The login logic goes here
-    print("login logic here");
+    if (_usernameController.text == defaultUsername &&
+        _passwordController.text == defaultPassword) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const HabitTrackerScreen(),
+        ),
+      );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid username or password'),
+        ),
+      );
+    }
   }
 
   @override
@@ -47,7 +61,9 @@ class _LoginScreenState extends State<LoginScreen> {
                     color: Colors.white,
                   ),
                 ),
+
                 const SizedBox(height: 30),
+
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -61,11 +77,15 @@ class _LoginScreenState extends State<LoginScreen> {
                       hintText: 'Enter Username',
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
+                        horizontal: 20,
+                        vertical: 15,
+                      ),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
                 Container(
                   decoration: BoxDecoration(
                     color: Colors.white,
@@ -75,28 +95,33 @@ class _LoginScreenState extends State<LoginScreen> {
                     controller: _passwordController,
                     obscureText: true,
                     decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.lock, color: Colors.blue.shade700),
+                      prefixIcon:
+                          Icon(Icons.lock, color: Colors.blue.shade700),
                       hintText: 'Enter Password',
                       border: InputBorder.none,
                       contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 15),
+                        horizontal: 20,
+                        vertical: 15,
+                      ),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
                 Align(
                   alignment: Alignment.centerRight,
                   child: TextButton(
-                    onPressed: () {
-                      // Logic for forgot password can be added here
-                    },
+                    onPressed: () {},
                     child: const Text(
                       'Forgot password?',
                       style: TextStyle(color: Colors.white),
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
                 ElevatedButton(
                   onPressed: _login,
                   style: ElevatedButton.styleFrom(
@@ -105,7 +130,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 80, vertical: 15),
+                      horizontal: 80,
+                      vertical: 15,
+                    ),
                   ),
                   child: const Text(
                     'Log in',
@@ -116,18 +143,23 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
+
                 const SizedBox(height: 20),
+
                 const Text(
                   'or',
                   style: TextStyle(color: Colors.white70),
                 ),
+
                 const SizedBox(height: 10),
+
                 OutlinedButton(
                   onPressed: () {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const RegisterScreen()),
+                        builder: (context) => const RegisterScreen(),
+                      ),
                     );
                   },
                   style: OutlinedButton.styleFrom(
@@ -136,11 +168,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       borderRadius: BorderRadius.circular(30.0),
                     ),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 70, vertical: 15),
+                      horizontal: 70,
+                      vertical: 15,
+                    ),
                   ),
                   child: const Text(
                     'Sign up',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                    ),
                   ),
                 ),
               ],

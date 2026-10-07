@@ -12,10 +12,15 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _nameController = TextEditingController();
   final _usernameController = TextEditingController();
-  double _age = 25; // Default age set to 25
+
+  double _age = 25;
+
   String _country = 'United States';
+
   List<String> _countries = [];
+
   List<String> selectedHabits = [];
+
   List<String> availableHabits = [
     'Wake Up Early',
     'Workout',
@@ -26,7 +31,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'Sleep 8 Hours',
     'Eat Healthy',
     'Journal',
-    'Walk 10,000 Steps'
+    'Walk 10,000 Steps',
   ];
 
   @override
@@ -47,19 +52,50 @@ class _RegisterScreenState extends State<RegisterScreen> {
       'Japan',
       'China',
       'Brazil',
-      'South Africa'
+      'South Africa',
     ];
 
     setState(() {
       _countries = subsetCountries;
       _countries.sort();
-      _country = _countries.isNotEmpty ? _countries[0] : 'United States';
+
+      _country =
+          _countries.isNotEmpty ? _countries[0] : 'United States';
     });
   }
 
-  void _register() async {
-    // dummy for now
-    print("registration logic here");
+  void _register() {
+    if (_nameController.text.trim().isEmpty ||
+        _usernameController.text.trim().isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please enter your name and username'),
+        ),
+      );
+      return;
+    }
+
+    if (selectedHabits.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please select at least one habit'),
+        ),
+      );
+      return;
+    }
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Registration successful'),
+      ),
+    );
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
   }
 
   @override
@@ -76,37 +112,67 @@ class _RegisterScreenState extends State<RegisterScreen> {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => LoginScreen()),
+              MaterialPageRoute(
+                builder: (context) => const LoginScreen(),
+              ),
             );
           },
         ),
       ),
+
       body: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.blue.shade700, Colors.blue.shade900],
+            colors: [
+              Colors.blue.shade700,
+              Colors.blue.shade900,
+            ],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),
         ),
+
         child: Center(
           child: SingleChildScrollView(
-            padding:
-                const EdgeInsets.symmetric(horizontal: 24.0, vertical: 8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 8.0,
+            ),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildInputField(_nameController, 'Name', Icons.person),
-                const SizedBox(height: 10),
                 _buildInputField(
-                    _usernameController, 'Username', Icons.alternate_email),
+                  _nameController,
+                  'Name',
+                  Icons.person,
+                ),
+
                 const SizedBox(height: 10),
-                Text('Age: ${_age.round()}',
-                    style: const TextStyle(color: Colors.white, fontSize: 18)),
+
+                _buildInputField(
+                  _usernameController,
+                  'Username',
+                  Icons.alternate_email,
+                ),
+
+                const SizedBox(height: 10),
+
+                Text(
+                  'Age: ${_age.round()}',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+
                 Slider(
                   value: _age,
                   min: 21,
@@ -120,27 +186,60 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     });
                   },
                 ),
+
                 const SizedBox(height: 10),
+
                 _buildCountryDropdown(),
+
                 const SizedBox(height: 10),
-                const Text('Select Your Habits',
-                    style: TextStyle(color: Colors.white, fontSize: 18)),
+
+                const Text(
+                  'Select Your Habits',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
                 Wrap(
                   spacing: 10,
                   runSpacing: 10,
                   children: availableHabits.map((habit) {
-                    final isSelected = selectedHabits.contains(habit);
+                    final isSelected =
+                        selectedHabits.contains(habit);
+
                     return GestureDetector(
-                      onTap: () => null,
+                      onTap: () {
+                        setState(() {
+                          if (selectedHabits.contains(habit)) {
+                            selectedHabits.remove(habit);
+                          } else {
+                            selectedHabits.add(habit);
+                          }
+                        });
+                      },
+
                       child: Container(
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 20, vertical: 10),
-                        decoration: BoxDecoration(
-                          color:
-                              isSelected ? Colors.blue.shade600 : Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: Colors.blue.shade700),
+                          horizontal: 20,
+                          vertical: 10,
                         ),
+
+                        decoration: BoxDecoration(
+                          color: isSelected
+                              ? Colors.blue.shade600
+                              : Colors.white,
+
+                          borderRadius:
+                              BorderRadius.circular(20),
+
+                          border: Border.all(
+                            color: Colors.blue.shade700,
+                          ),
+                        ),
+
                         child: Text(
                           habit,
                           style: TextStyle(
@@ -153,18 +252,27 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     );
                   }).toList(),
                 ),
+
                 const SizedBox(height: 20),
+
                 Center(
                   child: ElevatedButton(
                     onPressed: _register,
+
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blue.shade600,
+
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(30.0),
+                        borderRadius:
+                            BorderRadius.circular(30.0),
                       ),
+
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 80, vertical: 15),
+                        horizontal: 80,
+                        vertical: 15,
+                      ),
                     ),
+
                     child: const Text(
                       'Register',
                       style: TextStyle(
@@ -184,20 +292,34 @@ class _RegisterScreenState extends State<RegisterScreen> {
   }
 
   Widget _buildInputField(
-      TextEditingController controller, String hint, IconData icon) {
+    TextEditingController controller,
+    String hint,
+    IconData icon,
+  ) {
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
       ),
+
       child: TextField(
         controller: controller,
+
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: Colors.blue.shade700),
+          prefixIcon: Icon(
+            icon,
+            color: Colors.blue.shade700,
+          ),
+
           hintText: hint,
+
           border: InputBorder.none,
+
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+              const EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 15,
+          ),
         ),
       ),
     );
@@ -205,26 +327,40 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   Widget _buildCountryDropdown() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+      ),
+
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(30),
       ),
+
       child: DropdownButton<String>(
         value: _country,
-        icon: Icon(Icons.arrow_drop_down, color: Colors.blue.shade700),
+
+        icon: Icon(
+          Icons.arrow_drop_down,
+          color: Colors.blue.shade700,
+        ),
+
         isExpanded: true,
+
         underline: const SizedBox(),
+
         items: _countries.map((String value) {
           return DropdownMenuItem<String>(
             value: value,
             child: Text(value),
           );
         }).toList(),
+
         onChanged: (newValue) {
-          setState(() {
-            _country = newValue!;
-          });
+          if (newValue != null) {
+            setState(() {
+              _country = newValue;
+            });
+          }
         },
       ),
     );
